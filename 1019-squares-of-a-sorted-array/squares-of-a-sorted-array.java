@@ -1,24 +1,54 @@
 class Solution {
     public int[] sortedSquares(int[] nums) {
-        int n = nums.length;
-        int[] ans = new int[n];
 
-        int left = 0;
-        int right = n - 1;
-        int k = n - 1;
+        ArrayList<Integer> ni = new ArrayList<>();
+        ArrayList<Integer> po = new ArrayList<>();
 
-        while (left <= right) {
-            int leftSquare = nums[left] * nums[left];
-            int rightSquare = nums[right] * nums[right];
-
-            if (leftSquare > rightSquare) {
-                ans[k] = leftSquare;
-                left++;
+        // Separate negative and positive numbers
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < 0) {
+                ni.add(nums[i]);
             } else {
-                ans[k] = rightSquare;
-                right--;
+                po.add(nums[i]);
             }
-            k--;
+        }
+
+        // Result array
+        int[] ans = new int[nums.length];
+
+        // Start from the last negative element
+        int i = ni.size() - 1;
+
+        // Start from the first positive element
+        int j = 0;
+
+        int k = 0;
+
+        // Merge
+        while (i >= 0 && j < po.size()) {
+
+            int left = ni.get(i) * ni.get(i);
+            int right = po.get(j) * po.get(j);
+
+            if (left < right) {
+                ans[k++] = left;
+                i--;
+            } else {
+                ans[k++] = right;
+                j++;
+            }
+        }
+
+        // Remaining negatives
+        while (i >= 0) {
+            ans[k++] = ni.get(i) * ni.get(i);
+            i--;
+        }
+
+        // Remaining positives
+        while (j < po.size()) {
+            ans[k++] = po.get(j) * po.get(j);
+            j++;
         }
 
         return ans;
